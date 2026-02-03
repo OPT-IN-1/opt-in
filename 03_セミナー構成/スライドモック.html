@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>バックエンドセミナー スライドモック</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+    }
+    
+    .slide-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .slide-wrapper {
+      margin-bottom: 60px;
+    }
+    
+    .slide-number {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    
+    .slide {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    
+    /* 背景パターン */
+    .bg-gradient {
+      background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    }
+    
+    .bg-gradient::before,
+    .bg-gradient::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      opacity: 0.15;
+    }
+    
+    .bg-gradient::before {
+      background: linear-gradient(135deg, #e91e8c, #9c27b0);
+      top: -200px;
+      left: -100px;
+    }
+    
+    .bg-gradient::after {
+      background: linear-gradient(135deg, #7c4dff, #536dfe);
+      bottom: -200px;
+      right: -100px;
+    }
+    
+    /* 装飾的な三角形 */
+    .decoration-triangle {
+      position: absolute;
+      width: 0;
+      height: 0;
+    }
+    
+    .decoration-triangle.top-right {
+      border-left: 200px solid transparent;
+      border-top: 150px solid rgba(255,255,255,0.3);
+      top: 0;
+      right: 0;
+    }
+    
+    .decoration-triangle.bottom-left {
+      border-right: 200px solid transparent;
+      border-bottom: 150px solid rgba(255,255,255,0.3);
+      bottom: 0;
+      left: 0;
+    }
+    
+    /* コンテンツスタイル */
+    .slide-content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px;
+      text-align: center;
+    }
+    
+    .main-title {
+      font-size: 48px;
+      font-weight: 900;
+      color: #1a1a4e;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+    
+    .main-title.with-underline {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .main-title.with-underline::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #e91e8c, #9c27b0);
+    }
+    
+    .subtitle {
+      font-size: 24px;
+      color: #555;
+      margin-top: 15px;
+    }
+    
+    .highlight-pink {
+      color: #e91e8c;
+    }
+    
+    .highlight-purple {
+      color: #7c4dff;
+    }
+    
+    /* カードスタイル */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      max-width: 80%;
+    }
+    
+    .card-large {
+      background: white;
+      border-radius: 20px;
+      padding: 50px 60px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+      width: 85%;
+    }
+    
+    /* チェックリスト */
+    .checklist {
+      text-align: left;
+      list-style: none;
+    }
+    
+    .checklist li {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 20px;
+      padding-left: 45px;
+      position: relative;
+      line-height: 1.5;
+    }
+    
+    .checklist li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, #e91e8c, #9c27b0);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    /* 番号付きリスト */
+    .numbered-list {
+      text-align: left;
+      list-style: none;
+    }
+    
+    .numbered-list li {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 18px;
+      padding-left: 50px;
+      position: relative;
+      line-height: 1.5;
+    }
+    
+    .numbered-list li .num {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #e91e8c;
+    }
+    
+    /* ルールカード（グリッド） */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 90%;
+    }
+    
+    .rules-grid.two-col {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 70%;
+    }
+    
+    .rule-card {
+      background: linear-gradient(180deg, #f8f8f8 0%, #fff 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .rule-card-header {
+      background: linear-gradient(90deg, #e91e8c, #7c4dff);
+      color: white;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+    
+    .rule-card-body {
+      padding: 20px;
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+      line-height: 1.6;
+    }
+    
+    /* ステップ形式 */
+    .step-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 70%;
+    }
+    
+    .step-box {
+      background: white;
+      border: 2px solid #7c4dff;
+      border-radius: 12px;
+      padding: 25px 40px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a4e;
+    }
+    
+    .step-box.highlight {
+      background: linear-gradient(90deg, #e91e8c, #7c4dff);
+      border: none;
+      color: white;
+    }
+    
+    .step-arrow {
+      text-align: center;
+      font-size: 30px;
+      color: #9c27b0;
+    }
+    
+    /* バナー形式 */
+    .banner {
+      width: 100%;
+      padding: 30px 60px;
+      text-align: center;
+    }
+    
+    .banner.gradient {
+      background: linear-gradient(90deg, #e91e8c, #7c4dff);
+      color: white;
+    }
+    
+    .banner-text {
+      font-size: 36px;
+      font-weight: 900;
+    }
+    
+    /* タイムラインスタイル */
+    .timeline {
+      text-align: left;
+      width: 80%;
+    }
+    
+    .timeline-item {
+      display: flex;
+      margin-bottom: 15px;
+      font-size: 18px;
+      align-items: flex-start;
+    }
+    
+    .timeline-date {
+      min-width: 160px;
+      font-weight: 700;
+      color: #e91e8c;
+    }
+    
+    .timeline-content {
+      color: #333;
+    }
+    
+    /* データカード */
+    .data-card {
+      background: white;
+      border-left: 5px solid #e91e8c;
+      padding: 25px 30px;
+      margin-bottom: 15px;
+      border-radius: 0 12px 12px 0;
+      text-align: left;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .data-number {
+      font-size: 36px;
+      font-weight: 900;
+      color: #e91e8c;
+    }
+    
+    .data-label {
+      font-size: 18px;
+      color: #555;
+      margin-top: 5px;
+    }
+    
+    /* 質問スライド */
+    .question-box {
+      background: white;
+      border-radius: 20px;
+      padding: 50px 60px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+      max-width: 85%;
+    }
+    
+    .question-text {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a1a4e;
+      line-height: 1.5;
+    }
+    
+    .question-note {
+      font-size: 18px;
+      color: #e91e8c;
+      margin-top: 25px;
+    }
+    
+    /* 比較スライド */
+    .comparison {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+      width: 80%;
+    }
+    
+    .comparison-item {
+      text-align: center;
+    }
+    
+    .comparison-arrow {
+      font-size: 40px;
+      color: #7c4dff;
+    }
+    
+    /* 画像挿入プレースホルダー */
+    .image-placeholder {
+      background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+      border: 3px dashed #ccc;
+      border-radius: 12px;
+      padding: 40px;
+      color: #888;
+      font-size: 18px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    /* STEPヘッダー */
+    .step-header {
+      background: #1a1a4e;
+      color: white;
+      padding: 8px 20px;
+      font-size: 12px;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      border-radius: 20px;
+      z-index: 20;
+    }
+    
+    /* プロフィールカード */
+    .profile-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+      max-width: 85%;
+    }
+    
+    .profile-image {
+      width: 180px;
+      height: 180px;
+      background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+      border: 3px dashed #ccc;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .profile-info {
+      text-align: left;
+    }
+    
+    .profile-name {
+      font-size: 32px;
+      font-weight: 900;
+      color: #1a1a4e;
+      margin-bottom: 10px;
+    }
+    
+    .profile-title {
+      font-size: 18px;
+      color: #e91e8c;
+      margin-bottom: 15px;
+    }
+    
+    .profile-achievements {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+    
+    /* 中央寄せテキスト */
+    .center-message {
+      font-size: 42px;
+      font-weight: 900;
+      color: #1a1a4e;
+      line-height: 1.5;
+      max-width: 80%;
+    }
+    
+    .center-message .highlight {
+      color: #e91e8c;
+    }
+    
+    /* ニュース引用 */
+    .news-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 80%;
+      text-align: left;
+    }
+    
+    .news-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a4e;
+      margin-bottom: 15px;
+    }
+    
+    .news-meta {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 15px;
+    }
+    
+    .news-excerpt {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <h1 style="text-align: center; margin-bottom: 60px; color: #1a1a4e;">バックエンドセミナー スライドモック（32枚）</h1>
+    
+    <!-- ==================== STEP 1: オープニング ==================== -->
+    
+    <!-- Page 1 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 1 / STEP 1: オープニング</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div style="text-align: center;">
+            <p style="font-size: 24px; color: #e91e8c; margin-bottom: 15px; font-weight: 500;">AI時代の"生存戦略"</p>
+            <h1 class="main-title" style="font-size: 56px; margin-bottom: 25px;">
+              生成AI × 業務効率化で<br>市場価値を上げる
+            </h1>
+            <p style="font-size: 32px; font-weight: 900; color: #7c4dff;">AI活用 完全攻略ロードマップ</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 2 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 2 / STEP 1: オープニング</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <h2 class="main-title with-underline" style="font-size: 42px; margin-bottom: 40px;">3日間、お疲れ様でした</h2>
+            <p style="font-size: 26px; color: #555; line-height: 1.8;">
+              AIで資料が作れるようになった<br><br>
+              今日は、ブートキャンプで得たスキルを無駄にせず<br>
+              <span class="highlight-pink" style="font-weight: 700;">実務で最大限に活かす</span>ために必要なことを伝えます
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 3 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 3 / STEP 1: オープニング</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large" style="text-align: center;">
+            <p style="font-size: 24px; color: #555; margin-bottom: 20px;">最後まで参加された方には</p>
+            <h2 class="main-title" style="font-size: 48px; margin-bottom: 30px;">
+              <span class="highlight-pink">特典</span>をお渡しします
+            </h2>
+            <div style="background: linear-gradient(90deg, #e91e8c, #7c4dff); padding: 25px 50px; border-radius: 12px; display: inline-block;">
+              <p style="color: white; font-size: 28px; font-weight: 700;">AI活用プロンプト集</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 4 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 4 / STEP 1: オープニング</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h2 class="main-title with-underline" style="font-size: 48px; margin-bottom: 50px;">セミナーのルール</h2>
+          <div class="rules-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 80%;">
+            <div class="rule-card">
+              <div class="rule-card-header">1. 顔出し推奨</div>
+              <div class="rule-card-body">ミュート参加OK<br>やむを得ない場合のみオフでも可</div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-card-header">2. 録音録画・文字起こし禁止</div>
+              <div class="rule-card-body">社外秘の内容も含まれるため<br>外部流出はご遠慮ください</div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-card-header">3. 集中できる環境で参加</div>
+              <div class="rule-card-body">携帯操作 / 食事 / 移動中など<br>"ながら参加"はお断りしています</div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-card-header">4. メモは不要</div>
+              <div class="rule-card-body">情報量が多くスピードも早いため<br>聞くことに集中してください</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 5 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 5 / STEP 1: オープニング</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h2 class="main-title with-underline" style="font-size: 48px; margin-bottom: 50px;">今日のゴール</h2>
+          <div class="card-large" style="width: 85%;">
+            <ul class="checklist">
+              <li>AIを使いこなせる人と使えない人、<span class="highlight-pink" style="font-weight: 700;">この先どう差がつくのか</span></li>
+              <li>ブートキャンプで学んだスキルを<span class="highlight-pink" style="font-weight: 700;">普段の業務にも応用する方法</span>がわかる</li>
+              <li>AI時代に<span class="highlight-pink" style="font-weight: 700;">"評価される人材"になるためのロードマップ</span>を手に入れる</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ==================== STEP 2: 参加者との対話・巻き込み ==================== -->
+    
+    <!-- Page 6 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 6 / STEP 2: 参加者との対話・巻き込み</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="question-box">
+            <p class="question-text">
+              ブートキャンプでAIを使って<br>資料作成をしてみて<br>
+              <span class="highlight-pink">どんなことを感じましたか？</span>
+            </p>
+            <p class="question-note">※チャットに一言で書いてください</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 7 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 7 / STEP 2: 参加者との対話・巻き込み</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="question-box">
+            <p class="question-text">
+              今後、AIで<br>
+              <span class="highlight-pink">実現したいこと</span>は何ですか？
+            </p>
+            <p class="question-note">※チャットに書いてください</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ==================== STEP 3: 自己紹介・権威性の提示 ==================== -->
+    
+    <!-- Page 8 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 8 / STEP 3: 自己紹介・権威性の提示</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h2 class="main-title with-underline" style="font-size: 56px;">簡単な自己紹介</h2>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 9 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 9 / STEP 3: 自己紹介・権威性の提示</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="profile-card">
+            <div class="profile-image">（画像挿入）</div>
+            <div class="profile-info">
+              <p class="profile-name">（スピーカー名）</p>
+              <p class="profile-title">（肩書き）</p>
+              <p class="profile-achievements">
+                （実績まとめ：〇〇、〇〇、〇〇 など）
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 10 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 10 / STEP 3: 自己紹介・権威性の提示</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <p style="font-size: 24px; color: #888; margin-bottom: 20px;">ただ、最初からうまくいったわけではない</p>
+            <h2 class="main-title" style="font-size: 38px; margin-bottom: 30px;">
+              ChatGPTに<span class="highlight-pink">振り回されていた</span>
+            </h2>
+            <p style="font-size: 24px; color: #555; line-height: 1.8;">
+              何度も指示を出し直して<br>
+              「手で作った方が早い」と思ったことも
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 11 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 11 / STEP 3: 自己紹介・権威性の提示</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <h2 class="main-title" style="font-size: 36px; margin-bottom: 30px;">
+              ある<span class="highlight-pink">"考え方"</span>に気づいてから<br>
+              AIとの付き合い方が根本から変わった
+            </h2>
+            <div style="background: #f8f8f8; padding: 30px; border-radius: 12px; margin-top: 20px;">
+              <p style="font-size: 22px; color: #555; line-height: 1.8;">
+                ブートキャンプで同じ体験をしたはず<br>
+                「AIってちゃんと使えるんだ」という感覚<br><br>
+                <span style="color: #7c4dff; font-weight: 700;">今日は、その感覚をさらに広げていく</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ==================== STEP 4: 問題提起 ==================== -->
+    
+    <!-- Page 12 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 12 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <p style="font-size: 24px; color: #888; margin-bottom: 25px;">ブートキャンプで</p>
+            <h2 style="font-size: 30px; color: #1a1a4e; line-height: 1.8; font-weight: 700;">
+              「AIに指示を出すだけで、<span class="highlight-pink">資料の骨子ができた</span>」<br>
+              「資料作成にかかる<span class="highlight-pink">時間が大幅に短縮できた</span>」
+            </h2>
+            <p style="font-size: 26px; color: #555; margin-top: 30px;">と実感したと思います</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 13 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 13 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <p style="font-size: 28px; color: #888; margin-bottom: 30px;">ただ、ここで考えてほしいことがある</p>
+            <h2 class="main-title" style="font-size: 34px; line-height: 1.6;">
+              ブートキャンプで学んだのは<br>
+              <span class="highlight-pink">"資料作成"</span>という、AIの一部分<br><br>
+              <span style="color: #7c4dff;">AI全体で見たとき、今どんなことが起きているのか</span>
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 14 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 14 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <h2 class="main-title" style="font-size: 36px; margin-bottom: 30px;">
+              <span class="highlight-pink">インターネットが普及し始めた頃</span>を<br>覚えていますか？
+            </h2>
+            <div style="text-align: left; margin-top: 30px;">
+              <p style="font-size: 22px; color: #555; line-height: 1.8; margin-bottom: 20px;">
+                1990年代後半〜2000年代にかけて、ネット社会化が進んだ<br>
+                「これからはインターネットの時代だ」と言われ、社会は大きく変わった
+              </p>
+              <p style="font-size: 22px; color: #7c4dff; line-height: 1.8; font-weight: 500;">
+                でも、その変化には10年、20年という時間があった<br>
+                企業も個人も、ゆっくり適応する時間があった
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 15 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 15 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h1 class="main-title" style="font-size: 80px;">
+            <span class="highlight-pink">AIは違う</span>
+          </h1>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 16 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 16 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <h2 class="main-title" style="font-size: 32px; margin-bottom: 30px;">
+              ChatGPTが登場したのは<span class="highlight-pink">2022年11月</span><br>
+              たった<span class="highlight-pink">2ヶ月で1億ユーザー</span>を突破
+            </h2>
+            <div style="background: #f8f8f8; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+              <p style="font-size: 20px; color: #555;">
+                Instagramは2年半、Facebookは4年半かかった<br>
+                <span style="font-weight: 700; color: #7c4dff;">人類史上、最も速く普及したテクノロジー</span>
+              </p>
+            </div>
+            <div class="image-placeholder">（画像挿入：普及スピード比較グラフ）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 17 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 17 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h2 class="main-title with-underline" style="font-size: 42px; margin-bottom: 40px;">AIの進化スピード</h2>
+          <div class="card-large" style="width: 90%;">
+            <div class="timeline">
+              <div class="timeline-item">
+                <span class="timeline-date">2022年11月</span>
+                <span class="timeline-content">ChatGPT登場</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">2023年3月</span>
+                <span class="timeline-content">GPT-4（司法試験上位10%レベル）</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">2024年2月</span>
+                <span class="timeline-content">Sora（テキストから動画生成）</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">2024年5月</span>
+                <span class="timeline-content">GPT-4o（リアルタイム音声対話）</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">2024年9月</span>
+                <span class="timeline-content">o1（推論能力で人間超え）</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">2025年〜</span>
+                <span class="timeline-content">エージェントAI（自律的にタスク実行）</span>
+              </div>
+            </div>
+            <div class="image-placeholder" style="margin-top: 20px;">（画像挿入：AI進化の年表）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 18 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 18 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h2 class="main-title with-underline" style="font-size: 42px; margin-bottom: 40px;">AI資料作成ツールの進化</h2>
+          <div class="card-large" style="width: 90%;">
+            <div class="timeline">
+              <div class="timeline-item">
+                <span class="timeline-date">2022年</span>
+                <span class="timeline-content">Tome、Gamma登場（テキストからスライド自動生成）</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">2023年10月</span>
+                <span class="timeline-content">Canva Magic Studio（AI機能パッケージ）</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">2025年3月</span>
+                <span class="timeline-content">Manus登場（汎用AIエージェント）</span>
+              </div>
+            </div>
+            <p style="font-size: 20px; color: #7c4dff; margin-top: 25px; font-weight: 500;">
+              ブートキャンプで使ったツールも、数年前には存在しなかった
+            </p>
+            <div class="image-placeholder" style="margin-top: 20px;">（画像挿入：資料作成AIの進化）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 19 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 19 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <h2 class="main-title" style="font-size: 34px; line-height: 1.6;">
+              <span class="highlight-pink">2022年から2026年の4年間</span>で<br>ここまで変わった
+            </h2>
+            <div style="background: #f8f8f8; padding: 30px; border-radius: 12px; margin-top: 30px;">
+              <p style="font-size: 24px; color: #555; line-height: 1.8;">
+                ネット社会化が10年かけた変化が、<br>
+                AIは<span style="color: #e91e8c; font-weight: 700;">数ヶ月単位</span>で起きている<br><br>
+                <span style="color: #7c4dff; font-weight: 700;">半年前の知識が、もう古くなっている世界</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 20 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 20 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h2 class="main-title with-underline" style="font-size: 48px; margin-bottom: 40px;">AI市場の成長</h2>
+          <div class="image-placeholder" style="width: 70%; padding: 80px;">（画像挿入：市場規模グラフ）</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 21 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 21 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large" style="width: 90%;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+              <div>
+                <h3 style="font-size: 24px; color: #e91e8c; margin-bottom: 20px; font-weight: 700;">世界のAI市場規模</h3>
+                <p style="font-size: 20px; color: #1a1a4e; line-height: 1.8;">
+                  2024年 約<span style="font-size: 32px; font-weight: 900;">3,160億</span>ドル<br>
+                  ↓<br>
+                  2029年 約<span style="font-size: 32px; font-weight: 900; color: #e91e8c;">1.2兆</span>ドル（<span class="highlight-pink">4倍</span>）
+                </p>
+              </div>
+              <div>
+                <h3 style="font-size: 24px; color: #7c4dff; margin-bottom: 20px; font-weight: 700;">日本のAI市場規模</h3>
+                <p style="font-size: 20px; color: #1a1a4e; line-height: 1.8;">
+                  2024年 → 2032年で<br>
+                  約<span style="font-size: 32px; font-weight: 900; color: #7c4dff;">10倍</span>に成長予測
+                </p>
+              </div>
+            </div>
+            <div class="image-placeholder" style="margin-top: 30px;">（画像挿入：市場成長グラフ）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 22 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 22 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h2 class="main-title with-underline" style="font-size: 48px; margin-bottom: 40px;">AI人材の需要</h2>
+          <div class="card-large" style="width: 85%;">
+            <ul class="checklist">
+              <li>2030年にIT人材が<span class="highlight-pink" style="font-weight: 700;">最大79万人不足</span>（経済産業省）</li>
+              <li>DX推進人材が「大幅に不足」と回答した企業：<span class="highlight-pink" style="font-weight: 700;">58.5%</span></li>
+              <li>年収1,000万円以上のAI求人：3年前比<span class="highlight-pink" style="font-weight: 700;">3.5倍</span></li>
+            </ul>
+            <div class="image-placeholder" style="margin-top: 25px;">（画像挿入：人材不足データ）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 23 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 23 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <h2 class="main-title with-underline" style="font-size: 48px; margin-bottom: 40px;">AI活用企業の成果</h2>
+          <div class="card-large" style="width: 85%;">
+            <ul class="checklist">
+              <li>AI先進企業の売上成長率：遅れている企業の<span class="highlight-pink" style="font-weight: 700;">1.7倍</span>（BCG調査）</li>
+              <li>AI導入企業の生産性：同業他社の<span class="highlight-pink" style="font-weight: 700;">2.4倍</span>（アクセンチュア調査）</li>
+            </ul>
+            <div class="image-placeholder" style="margin-top: 25px;">（画像挿入：企業成果データ）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 24 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 24 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div style="text-align: center;">
+            <p style="font-size: 28px; color: #888; margin-bottom: 30px;">ここまで、社会全体の話をしてきた</p>
+            <h2 class="main-title" style="font-size: 56px;">
+              ここからは<br><span class="highlight-pink">"あなた自身"</span>の話
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 25 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 25 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="question-box">
+            <p class="question-text">
+              あなたの会社で、<br>
+              <span class="highlight-pink">AIを使いこなしている人</span>は<br>何人いますか？
+            </p>
+            <p class="question-note">※チャットに数字で書いてください</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 26 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 26 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div style="text-align: center;">
+            <p style="font-size: 36px; color: #555; margin-bottom: 30px;">ほとんどいないはず</p>
+            <h2 class="main-title" style="font-size: 48px;">
+              つまり、今AIを学べば<br><span class="highlight-pink">"希少な存在"</span>になれる
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 27 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 27 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <p style="font-size: 24px; color: #888; margin-bottom: 25px;">ただ、使いこなしてる人に仕事が寄るのも事実</p>
+            <h2 class="main-title" style="font-size: 30px; line-height: 1.6; margin-bottom: 25px;">
+              業務過多で<span class="highlight-pink">"AIできる人"</span>にどんどん仕事が集まる<br>
+              逆に、使えない人には単純作業が残る<br><br>
+              <span style="color: #7c4dff;">この差、広がっていく</span>
+            </h2>
+            <div class="image-placeholder">（画像挿入：仕事が寄る現象のイメージ）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 28 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 28 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="question-box">
+            <p class="question-text">
+              今の業務で<br>
+              「これ、<span class="highlight-pink">AIでできるのでは？</span>」<br>
+              と思うことはありませんか？
+            </p>
+            <p style="font-size: 18px; color: #888; margin-top: 25px;">
+              ※メールの作成、議事録のまとめ、データの整理...
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 29 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 29 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="question-box">
+            <p class="question-text">
+              <span class="highlight-pink">1年後</span>、<br>
+              あなたの仕事は<br>どうなっていると思いますか？
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 30 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 30 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <h2 class="main-title" style="font-size: 32px; margin-bottom: 30px;">上司との評価面談</h2>
+            <p style="font-size: 24px; color: #555; line-height: 1.8; margin-bottom: 25px;">
+              AIを使いこなしてる人は<span class="highlight-pink" style="font-weight: 700;">成果をアピールできる</span>
+            </p>
+            <div style="background: #f8f8f8; padding: 25px; border-radius: 12px;">
+              <p style="font-size: 22px; color: #555; line-height: 1.8;">
+                半年後の異動、来年の昇給<br>
+                <span style="color: #7c4dff; font-weight: 700;">どこで差がつくか</span><br><br>
+                「<span class="highlight-pink">AIで業務効率化しました</span>」と言える人と、言えない人
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 31 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 31 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div class="card-large">
+            <h2 class="main-title" style="font-size: 32px; line-height: 1.6; margin-bottom: 30px;">
+              周囲がAIを使いこなしている中で、<br>
+              <span class="highlight-pink">自分だけ取り残されている</span>
+            </h2>
+            <div style="background: #f8f8f8; padding: 25px; border-radius: 12px;">
+              <p style="font-size: 22px; color: #555; line-height: 1.8;">
+                ブートキャンプで学んだことも、<span style="color: #e91e8c;">使わなければ忘れていく</span><br><br>
+                せっかくの3日間が、<span style="color: #7c4dff;">"いい思い出"で終わってしまう</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Page 32 -->
+    <div class="slide-wrapper">
+      <div class="slide-number">Page 32 / STEP 4: 問題提起</div>
+      <div class="slide bg-gradient">
+        <div class="decoration-triangle top-right"></div>
+        <div class="decoration-triangle bottom-left"></div>
+        <div class="slide-content">
+          <div style="text-align: center;">
+            <p style="font-size: 28px; color: #555; margin-bottom: 25px;">
+              でも、<span class="highlight-pink" style="font-weight: 700;">今日ここにいる皆さんは違う</span>
+            </p>
+            <h2 class="main-title" style="font-size: 42px; line-height: 1.5;">
+              ブートキャンプを修了した皆さんには<br>
+              次に進む<span class="highlight-pink">"扉"</span>が開いている
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</body>
+</html>
