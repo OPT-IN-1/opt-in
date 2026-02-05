@@ -145,25 +145,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Men's Rise 個別相談申込者</h1>
-        <p class="subtitle">属性分析レポート（2026年2月4日更新）</p>
+            <h1>Men's Rise 個別相談申込者</h1>
+            <p class="subtitle">属性分析レポート（2026年2月5日更新・93名）</p>
 
         <div class="summary-card">
             <div class="summary-stats">
                 <div class="stat-item">
-                    <div class="stat-number">73</div>
+                    <div class="stat-number">93</div>
                     <div class="stat-label">総申込者数</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">60%</div>
+                    <div class="stat-number">57%</div>
                     <div class="stat-label">20代の割合</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">40%</div>
+                    <div class="stat-number">41%</div>
                     <div class="stat-label">年収500万以上</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">33%</div>
+                    <div class="stat-number">32%</div>
                     <div class="stat-label">即入会希望</div>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                 <div class="chart-container">
                     <canvas id="ageChart"></canvas>
                 </div>
-                <div class="insight">💡 20代が全体の60%を占め、特に20〜24歳が最多（37%）</div>
+                <div class="insight">💡 20代が全体の57%を占め、特に20〜24歳が最多（34%）</div>
             </div>
 
             <div class="chart-card">
@@ -183,7 +183,7 @@
                 <div class="chart-container">
                     <canvas id="occupationChart"></canvas>
                 </div>
-                <div class="insight">💡 会社員が約半数（47%）、学生も27%と高い割合</div>
+                <div class="insight">💡 会社員が約半数（49%）、学生も23%と高い割合</div>
             </div>
 
             <div class="chart-card">
@@ -191,7 +191,7 @@
                 <div class="chart-container">
                     <canvas id="incomeChart"></canvas>
                 </div>
-                <div class="insight">💡 年収500万円以上が40%、支払い能力のある層が多い</div>
+                <div class="insight">💡 年収500万円以上が41%、支払い能力のある層が多い</div>
             </div>
 
             <div class="chart-card">
@@ -199,7 +199,7 @@
                 <div class="chart-container">
                     <canvas id="investmentChart"></canvas>
                 </div>
-                <div class="insight">💡 月3〜5万円が最多（34%）、5万円以上も27%</div>
+                <div class="insight">💡 月3〜5万円が最多（34%）、5万円以上も31%</div>
             </div>
 
             <div class="chart-card">
@@ -207,7 +207,7 @@
                 <div class="chart-container">
                     <canvas id="intentChart"></canvas>
                 </div>
-                <div class="insight">💡 「前向きに検討」以上が85%、高い意欲層</div>
+                <div class="insight">💡 「前向きに検討」以上が83%、高い意欲層</div>
             </div>
 
             <div class="chart-card">
@@ -215,7 +215,7 @@
                 <div class="chart-container">
                     <canvas id="monitorChart"></canvas>
                 </div>
-                <div class="insight">💡 90%以上がモニター協力可能</div>
+                <div class="insight">💡 88%がモニター協力可能</div>
             </div>
         </div>
 
@@ -244,7 +244,7 @@
             data: {
                 labels: ['～19歳', '20〜24歳', '25〜29歳', '30〜34歳', '35〜39歳', '40〜44歳', '50歳以上'],
                 datasets: [{
-                    data: [10, 27, 17, 9, 7, 2, 1],
+                    data: [12, 32, 21, 13, 8, 5, 2],
                     backgroundColor: colors.gradient,
                     borderRadius: 8,
                     borderSkipped: false,
@@ -258,7 +258,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: (ctx) => `${ctx.raw}名 (${Math.round(ctx.raw/73*100)}%)`
+                            label: (ctx) => `${ctx.raw}名 (${Math.round(ctx.raw/93*100)}%)`
                         }
                     }
                 },
@@ -281,7 +281,7 @@
             data: {
                 labels: ['会社員', '学生', 'フリーランス', '経営者', 'フリーター'],
                 datasets: [{
-                    data: [34, 20, 9, 6, 4],
+                    data: [46, 21, 13, 8, 5],
                     backgroundColor: colors.pie,
                     borderWidth: 0,
                     hoverOffset: 10
@@ -297,7 +297,7 @@
                     },
                     tooltip: {
                         callbacks: {
-                            label: (ctx) => `${ctx.label}: ${ctx.raw}名 (${Math.round(ctx.raw/73*100)}%)`
+                            label: (ctx) => `${ctx.label}: ${ctx.raw}名 (${Math.round(ctx.raw/93*100)}%)`
                         }
                     }
                 }
@@ -310,7 +310,7 @@
             data: {
                 labels: ['100万以下', '100〜300万', '300〜500万', '500〜1000万', '1000万以上'],
                 datasets: [{
-                    data: [16, 14, 14, 24, 5],
+                    data: [17, 15, 23, 30, 8],
                     backgroundColor: colors.gradient,
                     borderRadius: 8,
                     borderSkipped: false,
@@ -323,7 +323,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: (ctx) => `${ctx.raw}名 (${Math.round(ctx.raw/73*100)}%)`
+                            label: (ctx) => `${ctx.raw}名 (${Math.round(ctx.raw/93*100)}%)`
                         }
                     }
                 },
@@ -346,7 +346,7 @@
             data: {
                 labels: ['1万円以下', '1〜3万円', '3〜5万円', '5〜10万円', 'それ以上'],
                 datasets: [{
-                    data: [5, 23, 25, 17, 3],
+                    data: [6, 26, 32, 23, 6],
                     backgroundColor: colors.pie,
                     borderWidth: 0,
                     hoverOffset: 10
@@ -362,7 +362,7 @@
                     },
                     tooltip: {
                         callbacks: {
-                            label: (ctx) => `${ctx.label}: ${ctx.raw}名 (${Math.round(ctx.raw/73*100)}%)`
+                            label: (ctx) => `${ctx.label}: ${ctx.raw}名 (${Math.round(ctx.raw/93*100)}%)`
                         }
                     }
                 }
@@ -375,7 +375,7 @@
             data: {
                 labels: ['今すぐ始めたい', 'ほぼ決めている', '前向きに検討', '悩んでいる'],
                 datasets: [{
-                    data: [14, 10, 38, 11],
+                    data: [14, 16, 47, 16],
                     backgroundColor: ['#00ff88', '#00d9ff', '#ffd700', '#ff6b6b'],
                     borderRadius: 8,
                     borderSkipped: false,
@@ -389,7 +389,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: (ctx) => `${ctx.raw}名 (${Math.round(ctx.raw/73*100)}%)`
+                            label: (ctx) => `${ctx.raw}名 (${Math.round(ctx.raw/93*100)}%)`
                         }
                     }
                 },
@@ -412,7 +412,7 @@
             data: {
                 labels: ['はい', 'いいえ'],
                 datasets: [{
-                    data: [66, 7],
+                    data: [82, 11],
                     backgroundColor: ['#00ff88', '#ff6b6b'],
                     borderWidth: 0,
                     hoverOffset: 10
@@ -428,7 +428,7 @@
                     },
                     tooltip: {
                         callbacks: {
-                            label: (ctx) => `${ctx.label}: ${ctx.raw}名 (${Math.round(ctx.raw/73*100)}%)`
+                            label: (ctx) => `${ctx.label}: ${ctx.raw}名 (${Math.round(ctx.raw/93*100)}%)`
                         }
                     }
                 }

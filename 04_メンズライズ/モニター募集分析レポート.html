@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Men's Rise モニター募集 分析レポート</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #fff;
+        }
+        .container { max-width: 1600px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8892b0;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            margin: 40px 0 20px;
+            padding-left: 15px;
+            border-left: 4px solid #00d9ff;
+            color: #fff;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .summary-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .summary-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .summary-card .label { color: #8892b0; font-size: 0.85rem; margin-top: 5px; }
+        .summary-card .sub { color: #ccd6f6; font-size: 0.75rem; margin-top: 3px; }
+        
+        .funnel-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .funnel-row {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .funnel-bar {
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        .funnel-label {
+            width: 200px;
+            text-align: right;
+            padding-right: 20px;
+            color: #ccd6f6;
+            font-size: 0.9rem;
+        }
+        .funnel-value {
+            margin-left: 15px;
+            color: #8892b0;
+            font-size: 0.9rem;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        .chart-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .chart-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chart-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #00d9ff, #00ff88);
+            border-radius: 2px;
+        }
+        .chart-container { position: relative; height: 280px; }
+        
+        .insight-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 3px solid #00d9ff;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            color: #ccd6f6;
+        }
+        .insight-box.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left-color: #ffc107;
+        }
+        .insight-box.success {
+            background: rgba(0, 255, 136, 0.1);
+            border-left-color: #00ff88;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.85rem;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .data-table th {
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            font-weight: 600;
+        }
+        .data-table tr:hover { background: rgba(255,255,255,0.03); }
+        
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin: 2px;
+        }
+        .tag-success { background: rgba(0,255,136,0.2); color: #00ff88; }
+        .tag-warning { background: rgba(255,193,7,0.2); color: #ffc107; }
+        .tag-danger { background: rgba(255,107,107,0.2); color: #ff6b6b; }
+        .tag-info { background: rgba(0,217,255,0.2); color: #00d9ff; }
+        .tag-purple { background: rgba(196,77,255,0.2); color: #c44dff; }
+        
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .full-width { grid-column: 1 / -1; }
+        
+        @media (max-width: 900px) {
+            .charts-grid { grid-template-columns: 1fr; }
+            .two-col { grid-template-columns: 1fr; }
+            .funnel-label { width: 120px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Men's Rise モニター募集 分析レポート</h1>
+        <p class="subtitle">2026年2月1日〜4日（3日間限定）公式LINE限定募集 | 個別相談申込データ分析</p>
+
+        <!-- サマリー -->
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="number">93</div>
+                <div class="label">総申込者数</div>
+                <div class="sub">LINE6,900人中</div>
+            </div>
+            <div class="summary-card">
+                <div class="number">1.35%</div>
+                <div class="label">申込率</div>
+                <div class="sub">VSL視聴→個別相談申込</div>
+            </div>
+            <div class="summary-card">
+                <div class="number">30</div>
+                <div class="label">個別相談実施</div>
+                <div class="sub">審査通過者</div>
+            </div>
+            <div class="summary-card">
+                <div class="number">4</div>
+                <div class="label">成約数</div>
+                <div class="sub">モニター契約</div>
+            </div>
+            <div class="summary-card">
+                <div class="number">13.3%</div>
+                <div class="label">成約率</div>
+                <div class="sub">面談→成約</div>
+            </div>
+            <div class="summary-card">
+                <div class="number">¥680K</div>
+                <div class="label">売上</div>
+                <div class="sub">¥170,000×4名</div>
+            </div>
+        </div>
+
+        <!-- ファネル分析 -->
+        <h2 class="section-title">📊 ファネル分析</h2>
+        <div class="funnel-section">
+            <div class="funnel-row">
+                <div class="funnel-label">公式LINE登録者</div>
+                <div class="funnel-bar" style="width: 100%; background: linear-gradient(90deg, #00d9ff, #0099cc);">6,900名</div>
+                <div class="funnel-value">100%</div>
+            </div>
+            <div class="funnel-row">
+                <div class="funnel-label">個別相談申込者</div>
+                <div class="funnel-bar" style="width: 13.5%; background: linear-gradient(90deg, #00e5c3, #00b39e);">93名</div>
+                <div class="funnel-value">1.35%</div>
+            </div>
+            <div class="funnel-row">
+                <div class="funnel-label">審査通過（対象者）</div>
+                <div class="funnel-bar" style="width: 8.2%; background: linear-gradient(90deg, #00ff88, #00cc6a);">60名</div>
+                <div class="funnel-value">64.5%（申込者中）</div>
+            </div>
+            <div class="funnel-row">
+                <div class="funnel-label">個別相談実施</div>
+                <div class="funnel-bar" style="width: 4.1%; background: linear-gradient(90deg, #ffd700, #cc9900);">30名</div>
+                <div class="funnel-value">50%（対象者中）</div>
+            </div>
+            <div class="funnel-row">
+                <div class="funnel-label">成約</div>
+                <div class="funnel-bar" style="width: 0.55%; background: linear-gradient(90deg, #ff6b6b, #cc5555);">4名</div>
+                <div class="funnel-value">13.3%（面談中）</div>
+            </div>
+        </div>
+
+        <!-- 審査内訳 -->
+        <h2 class="section-title">🔍 審査・除外内訳</h2>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">申込者の選考ステータス</h3>
+                <div class="chart-container">
+                    <canvas id="selectionChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">除外理由の内訳</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>除外カテゴリ</th>
+                        <th>人数</th>
+                        <th>割合</th>
+                        <th>備考</th>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-danger">自動対象外</span> 10代</td>
+                        <td>14名</td>
+                        <td>15%</td>
+                        <td>年齢制限（自動）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-danger">自動対象外</span> 40代以上</td>
+                        <td>4名</td>
+                        <td>4%</td>
+                        <td>年齢制限（自動）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-warning">今回除外</span> 学生</td>
+                        <td>28名</td>
+                        <td>30%</td>
+                        <td>モニター要件</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-warning">今回除外</span> 年収100万以下</td>
+                        <td>19名</td>
+                        <td>20%</td>
+                        <td>支払能力</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-warning">今回除外</span> モニター不可</td>
+                        <td>10名</td>
+                        <td>11%</td>
+                        <td>写真・HP掲載NG</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-info">ウェイティング</span></td>
+                        <td>35名</td>
+                        <td>38%</td>
+                        <td>本来案内可能だが枠制限</td>
+                    </tr>
+                </table>
+                <div class="insight-box warning">
+                    ⚠️ ウェイティング35名は本来商品案内できる層。次回募集で優先案内推奨
+                </div>
+            </div>
+        </div>
+
+        <!-- 属性分析 -->
+        <h2 class="section-title">👤 申込者属性分析（全93名）</h2>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">年齢分布</h3>
+                <div class="chart-container">
+                    <canvas id="ageChart"></canvas>
+                </div>
+                <div class="insight-box success">
+                    💡 20代が全体の61%を占める。ボリュームゾーンは20〜29歳（チャンネル視聴者層25-34歳と整合）
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">職業分布</h3>
+                <div class="chart-container">
+                    <canvas id="occupationChart"></canvas>
+                </div>
+                <div class="insight-box">
+                    💡 会社員47%が最多。学生30%は今回モニター対象外だが潜在顧客層として重要
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">年収分布</h3>
+                <div class="chart-container">
+                    <canvas id="incomeChart"></canvas>
+                </div>
+                <div class="insight-box success">
+                    💡 年収500万以上が33%。経営者・フリーランスで高年収層も一定数存在
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">月額投資可能額</h3>
+                <div class="chart-container">
+                    <canvas id="investmentChart"></canvas>
+                </div>
+                <div class="insight-box">
+                    💡 月3〜5万円が最多（32%）。5万円以上も28%おり、価格設定に余地あり
+                </div>
+            </div>
+        </div>
+
+        <!-- 入会意欲と面談結果 -->
+        <h2 class="section-title">🎯 入会意欲 × 面談結果</h2>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">申込時の入会意欲</h3>
+                <div class="chart-container">
+                    <canvas id="intentChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">個別相談結果（実施30名）</h3>
+                <div class="chart-container">
+                    <canvas id="resultChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="insight-box success">
+            🎉 <strong>成約者の共通点：</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>年齢：20〜29歳の会社員</li>
+                <li>年収：300〜500万円帯</li>
+                <li>意欲：「入会を決めている」「前向きに検討」</li>
+                <li>投資額：月3〜5万円可能</li>
+            </ul>
+        </div>
+
+        <!-- LINE流入元分析 -->
+        <h2 class="section-title">📱 LINE流入元分析</h2>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">LINE流入元別</h3>
+                <div class="chart-container">
+                    <canvas id="lineSourceChart"></canvas>
+                </div>
+                <div class="insight-box">
+                    💡 旧アカウント（6,400人）からの流入が約70%。休眠リストの再活性化に成功
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">VSL訴求ポイントの効果</h3>
+                <table class="data-table">
+                    <tr><th>VSL訴求</th><th>効果指標</th></tr>
+                    <tr>
+                        <td>「本気の人だけ」スクリーニング</td>
+                        <td><span class="tag tag-success">意欲度「決めている」以上 37%</span></td>
+                    </tr>
+                    <tr>
+                        <td>「有料である」明示</td>
+                        <td><span class="tag tag-success">月5万以上投資可能 28%</span></td>
+                    </tr>
+                    <tr>
+                        <td>「3ヶ月〜6ヶ月で変わる」</td>
+                        <td><span class="tag tag-info">短期成果期待層の集客</span></td>
+                    </tr>
+                    <tr>
+                        <td>「審査制」「10人限定」</td>
+                        <td><span class="tag tag-info">希少性・競争心の喚起</span></td>
+                    </tr>
+                    <tr>
+                        <td>リョータのストーリー共有</td>
+                        <td><span class="tag tag-purple">ファン層からの信頼獲得</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 悩み・ニーズ分析 -->
+        <h2 class="section-title">💭 申込者の悩み・ニーズ分析</h2>
+        <div class="chart-card full-width">
+            <h3 class="chart-title">頻出キーワード（悩み欄より抽出）</h3>
+            <div class="charts-grid" style="margin-top: 20px;">
+                <div>
+                    <h4 style="color: #00d9ff; margin-bottom: 15px;">🔥 TOP悩みキーワード</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <span class="tag tag-danger" style="font-size: 1rem; padding: 8px 16px;">自信がない</span>
+                        <span class="tag tag-danger" style="font-size: 0.95rem; padding: 7px 14px;">継続できない</span>
+                        <span class="tag tag-warning" style="font-size: 0.9rem; padding: 6px 12px;">何から始めればいいかわからない</span>
+                        <span class="tag tag-warning" style="font-size: 0.85rem; padding: 6px 12px;">自分を甘やかす</span>
+                        <span class="tag tag-info" style="font-size: 0.85rem; padding: 6px 12px;">肌荒れ</span>
+                        <span class="tag tag-info" style="font-size: 0.8rem; padding: 5px 10px;">筋トレ</span>
+                        <span class="tag tag-info" style="font-size: 0.8rem; padding: 5px 10px;">ファッション</span>
+                        <span class="tag tag-purple" style="font-size: 0.8rem; padding: 5px 10px;">モテたい</span>
+                        <span class="tag tag-purple" style="font-size: 0.75rem; padding: 5px 10px;">体型</span>
+                        <span class="tag tag-purple" style="font-size: 0.75rem; padding: 5px 10px;">マインド</span>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color: #00ff88; margin-bottom: 15px;">🎯 手に入れたい未来</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <span class="tag tag-success" style="font-size: 1rem; padding: 8px 16px;">自分に自信を持ちたい</span>
+                        <span class="tag tag-success" style="font-size: 0.95rem; padding: 7px 14px;">モテたい</span>
+                        <span class="tag tag-success" style="font-size: 0.9rem; padding: 6px 12px;">かっこいい男になりたい</span>
+                        <span class="tag tag-info" style="font-size: 0.85rem; padding: 6px 12px;">尊敬される存在</span>
+                        <span class="tag tag-info" style="font-size: 0.85rem; padding: 6px 12px;">余裕のある男</span>
+                        <span class="tag tag-purple" style="font-size: 0.8rem; padding: 5px 10px;">彼女を作りたい</span>
+                        <span class="tag tag-purple" style="font-size: 0.8rem; padding: 5px 10px;">仕事で成果</span>
+                    </div>
+                </div>
+            </div>
+            <div class="insight-box" style="margin-top: 20px;">
+                📌 <strong>インサイト：</strong>「情報は知っているが行動・継続ができない」層が最多。<br>
+                VSLの訴求「一人で頑張るんじゃなくて、プロのサポートと仲間と一緒に」が刺さっている証拠。<br>
+                →コミュニティ・伴走サポートの価値訴求を強化すべき
+            </div>
+        </div>
+
+        <!-- 改善提案 -->
+        <h2 class="section-title">📈 次回募集への改善提案</h2>
+        <div class="two-col">
+            <div class="chart-card">
+                <h3 class="chart-title">課題と改善点</h3>
+                <table class="data-table">
+                    <tr><th>課題</th><th>改善案</th></tr>
+                    <tr>
+                        <td>学生30%が対象外</td>
+                        <td>学生向け低価格プラン検討<br>または分割払い対応</td>
+                    </tr>
+                    <tr>
+                        <td>飛び・キャンセル発生</td>
+                        <td>リマインド強化<br>キャンセル料の明示</td>
+                    </tr>
+                    <tr>
+                        <td>ウェイティング35名が機会損失</td>
+                        <td>次回優先案内リスト作成<br>定期募集の仕組み化</td>
+                    </tr>
+                    <tr>
+                        <td>成約率13.3%</td>
+                        <td>事前ヒアリング強化<br>入会意欲高い層を優先</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">次回ターゲット推奨</h3>
+                <div style="padding: 20px;">
+                    <div style="background: rgba(0,255,136,0.1); padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                        <strong style="color: #00ff88;">🎯 最優先ターゲット</strong>
+                        <ul style="margin: 10px 0 0 20px; color: #ccd6f6;">
+                            <li>25〜34歳の会社員</li>
+                            <li>年収300〜1000万円</li>
+                            <li>月3〜10万円投資可能</li>
+                            <li>モニター協力可能</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(0,217,255,0.1); padding: 20px; border-radius: 12px;">
+                        <strong style="color: #00d9ff;">📊 期待成約率</strong>
+                        <p style="color: #ccd6f6; margin-top: 10px;">
+                            上記条件での絞り込み → 成約率20%以上見込み<br>
+                            今回データ: 該当層からの成約率 4/18 = 22%
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- サマリー -->
+        <div class="chart-card full-width" style="margin-top: 30px; background: linear-gradient(135deg, rgba(0,217,255,0.1), rgba(0,255,136,0.1));">
+            <h3 class="chart-title" style="font-size: 1.3rem;">📋 エグゼクティブサマリー</h3>
+            <div style="padding: 20px; line-height: 1.8; color: #ccd6f6;">
+                <p>
+                    <strong>【成果】</strong><br>
+                    公式LINE 6,900名に対し3日間限定（2/1〜2/4）で93名の個別相談申込を獲得（申込率1.35%）。審査制・有料の訴求により質の高いリード獲得に成功。
+                    モニター4名成約、売上68万円を達成。成約率13.3%は初回としては良好な数値。
+                </p>
+                <p style="margin-top: 15px;">
+                    <strong>【発見】</strong><br>
+                    ・休眠していた旧LINEアカウント（6,400人）からの流入が70%を占め、再活性化に成功<br>
+                    ・申込者の最大の悩みは「継続できない」「何から始めればいいかわからない」→伴走サポートの価値訴求が有効<br>
+                    ・学生・低年収層の申込が多く、価格がハードルになっている可能性
+                </p>
+                <p style="margin-top: 15px;">
+                    <strong>【次のアクション】</strong><br>
+                    ・ウェイティング35名への優先案内（次回募集時）<br>
+                    ・学生向けプラン or 分割払い対応の検討<br>
+                    ・成約率向上のため、事前ヒアリングで入会意欲を確認し、高意欲層を優先して面談設定
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colors = {
+            primary: ['#00d9ff', '#00e5c3', '#00ff88', '#ffd700', '#ff6b6b', '#c44dff', '#ff8c00'],
+            gradient: ['#00d9ff', '#00e5c3', '#00ff88', '#7fff00', '#ffd700'],
+        };
+
+        // 選考ステータス
+        new Chart(document.getElementById('selectionChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['個別相談実施', '審査通過・未面談', '自動対象外（10代）', '自動対象外（40代以上）', '今回除外（学生/低年収等）'],
+                datasets: [{
+                    data: [30, 30, 14, 4, 15],
+                    backgroundColor: ['#00ff88', '#00d9ff', '#ff6b6b', '#ff8c00', '#ffd700'],
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right', labels: { color: '#ccd6f6', padding: 12, font: { size: 11 } } }
+                }
+            }
+        });
+
+        // 年齢分布
+        new Chart(document.getElementById('ageChart'), {
+            type: 'bar',
+            data: {
+                labels: ['～19歳', '20〜24歳', '25〜29歳', '30〜34歳', '35〜39歳', '40〜44歳', '50歳以上'],
+                datasets: [{
+                    data: [14, 32, 21, 12, 10, 3, 1],
+                    backgroundColor: colors.gradient,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#8892b0' } },
+                    y: { grid: { display: false }, ticks: { color: '#ccd6f6' } }
+                }
+            }
+        });
+
+        // 職業分布
+        new Chart(document.getElementById('occupationChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['会社員', '学生', 'フリーランス', '経営者', 'フリーター'],
+                datasets: [{
+                    data: [44, 28, 10, 7, 4],
+                    backgroundColor: colors.primary,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#ccd6f6', padding: 12 } } }
+            }
+        });
+
+        // 年収分布
+        new Chart(document.getElementById('incomeChart'), {
+            type: 'bar',
+            data: {
+                labels: ['100万以下', '100〜300万', '300〜500万', '500〜1000万', '1000万以上'],
+                datasets: [{
+                    data: [19, 17, 19, 31, 7],
+                    backgroundColor: colors.gradient,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#ccd6f6', maxRotation: 45 } },
+                    y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#8892b0' } }
+                }
+            }
+        });
+
+        // 月額投資可能額
+        new Chart(document.getElementById('investmentChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['1万円以下', '1〜3万円', '3〜5万円', '5〜10万円', 'それ以上'],
+                datasets: [{
+                    data: [6, 26, 30, 24, 7],
+                    backgroundColor: colors.primary,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#ccd6f6', padding: 12 } } }
+            }
+        });
+
+        // 入会意欲
+        new Chart(document.getElementById('intentChart'), {
+            type: 'bar',
+            data: {
+                labels: ['今すぐ始めたい', 'ほぼ決めている', '前向きに検討', '悩んでいる'],
+                datasets: [{
+                    data: [17, 13, 44, 19],
+                    backgroundColor: ['#00ff88', '#00d9ff', '#ffd700', '#ff6b6b'],
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#8892b0' } },
+                    y: { grid: { display: false }, ticks: { color: '#ccd6f6' } }
+                }
+            }
+        });
+
+        // 面談結果
+        new Chart(document.getElementById('resultChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['成約', '検討中', '言質', '失注', '飛び/キャンセル', 'リスケ調整中'],
+                datasets: [{
+                    data: [4, 5, 2, 3, 8, 8],
+                    backgroundColor: ['#00ff88', '#00d9ff', '#c44dff', '#ff6b6b', '#8892b0', '#ffd700'],
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#ccd6f6', padding: 10, font: { size: 11 } } } }
+            }
+        });
+
+        // LINE流入元
+        new Chart(document.getElementById('lineSourceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['旧ハウス経由（6,400人）', '新ハウス経由（500人）'],
+                datasets: [{
+                    data: [65, 28],
+                    backgroundColor: ['#00d9ff', '#00ff88'],
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#ccd6f6', padding: 20, font: { size: 13 } } } }
+            }
+        });
+    </script>
+</body>
+</html>
