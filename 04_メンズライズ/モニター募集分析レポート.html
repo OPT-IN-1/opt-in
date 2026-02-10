@@ -207,19 +207,19 @@
                 <div class="sub">審査通過者</div>
             </div>
             <div class="summary-card">
-                <div class="number">4</div>
+                <div class="number">10</div>
                 <div class="label">成約数</div>
                 <div class="sub">モニター契約</div>
             </div>
             <div class="summary-card">
-                <div class="number">12.1%</div>
+                <div class="number">30.3%</div>
                 <div class="label">成約率</div>
                 <div class="sub">面談→成約</div>
             </div>
             <div class="summary-card">
-                <div class="number">¥680K</div>
+                <div class="number">¥1.7M</div>
                 <div class="label">売上</div>
-                <div class="sub">¥170,000×4名</div>
+                <div class="sub">¥170,000×10名</div>
             </div>
         </div>
 
@@ -253,8 +253,8 @@
             </div>
             <div class="funnel-row">
                 <div class="funnel-label">成約</div>
-                <div class="funnel-bar" style="width: 0.55%; background: linear-gradient(90deg, #ff6b6b, #cc5555);">4名</div>
-                <div class="funnel-value">12.1%（面談中）</div>
+                <div class="funnel-bar" style="width: 1.4%; background: linear-gradient(90deg, #ff6b6b, #cc5555);">10名</div>
+                <div class="funnel-value">30.3%（面談中）</div>
             </div>
             <div class="insight-box warning" style="margin-top: 25px;">
                 ⚠️ <strong>離脱ポイント：</strong>個別相談用LINE追加（379名）→ 申込（93名）で<strong>286名（75.5%）が離脱</strong><br>
@@ -395,12 +395,33 @@
         <h2 class="section-title">📱 LINE流入元分析</h2>
         <div class="charts-grid">
             <div class="chart-card">
-                <h3 class="chart-title">LINE流入元別</h3>
+                <h3 class="chart-title">個別相談登録経路（CC列）</h3>
                 <div class="chart-container">
                     <canvas id="lineSourceChart"></canvas>
                 </div>
+                <table class="data-table" style="margin-top: 15px;">
+                    <tr>
+                        <th>経路</th>
+                        <th>申込数</th>
+                        <th>割合</th>
+                        <th>母数対比</th>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-info">旧ハウス経由</span></td>
+                        <td>73名</td>
+                        <td>78%</td>
+                        <td>6,400人中 1.14%</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-success">新ハウス経由</span></td>
+                        <td>20名</td>
+                        <td>22%</td>
+                        <td>500人中 4.0%</td>
+                    </tr>
+                </table>
                 <div class="insight-box">
-                    💡 旧アカウント（6,400人）からの流入が約70%。休眠リストの再活性化に成功
+                    💡 旧アカウント（6,400人）からの流入が78%。休眠リストの再活性化に成功。<br>
+                    ただし母数対比では新ハウス（4.0%）の方が旧ハウス（1.14%）より申込率が約3.5倍高い
                 </div>
             </div>
             <div class="chart-card">
@@ -477,14 +498,14 @@
                 <p>
                     <strong>【成果】</strong><br>
                     公式LINE 6,900名に対し3日間限定（2/1〜2/4）で379名が個別相談用LINEに追加、うち93名が申込（LINE追加→申込率24.5%）。
-                    審査制・有料の訴求により質の高いリード獲得に成功。モニター4名成約、売上68万円を達成。
+                    審査制・有料の訴求により質の高いリード獲得に成功。<strong>モニター10名成約、売上170万円</strong>を達成。成約率30.3%。
                 </p>
                 <p style="margin-top: 15px;">
                     <strong>【発見】</strong><br>
-                    ・休眠していた旧LINEアカウント（6,400人）からの流入が70%を占め、再活性化に成功<br>
+                    ・休眠していた旧LINEアカウント（6,400人）から73名（78%）が申込、再活性化に成功<br>
+                    ・新ハウス（500人）は20名（22%）だが、母数対比の申込率は4.0%で旧ハウス（1.14%）の約3.5倍<br>
                     ・申込者の最大の悩みは「継続できない」「何から始めればいいかわからない」<br>
-                    ・学生・低年収層の申込が多い（学生30%、年収300万以下37%）<br>
-                    ・LINE追加→申込の転換率は24.5%（286名が未申込のまま）
+                    ・面談実施33名中10名が成約（成約率30.3%）。検討中3名、言質4名の追加成約見込みあり
                 </p>
             </div>
         </div>
@@ -626,7 +647,7 @@
             data: {
                 labels: ['成約', '検討中', '言質', '失注', '飛び/キャンセル', 'リスケ調整中'],
                 datasets: [{
-                    data: [4, 5, 2, 3, 8, 8],
+                    data: [10, 3, 4, 7, 6, 3],
                     backgroundColor: ['#00ff88', '#00d9ff', '#c44dff', '#ff6b6b', '#8892b0', '#ffd700'],
                     borderWidth: 0,
                 }]
@@ -642,9 +663,9 @@
         new Chart(document.getElementById('lineSourceChart'), {
             type: 'doughnut',
             data: {
-                labels: ['旧ハウス経由（6,400人）', '新ハウス経由（500人）'],
+                labels: ['旧ハウス経由（6,400人）: 73名', '新ハウス経由（500人）: 20名'],
                 datasets: [{
-                    data: [65, 28],
+                    data: [73, 20],
                     backgroundColor: ['#00d9ff', '#00ff88'],
                     borderWidth: 0,
                 }]
