@@ -202,20 +202,20 @@
                 <div class="sub">LINE追加379人中 24.5%</div>
             </div>
             <div class="summary-card">
-                <div class="number">33</div>
+                <div class="number">24</div>
                 <div class="label">個別相談実施</div>
-                <div class="sub">審査通過者</div>
+                <div class="sub">審査通過33名中</div>
             </div>
             <div class="summary-card">
                 <div class="number">10</div>
                 <div class="label">成約数</div>
                 <div class="sub">モニター契約</div>
             </div>
-            <div class="summary-card">
-                <div class="number">30.3%</div>
-                <div class="label">成約率</div>
-                <div class="sub">面談→成約</div>
-            </div>
+                        <div class="summary-card">
+                            <div class="number">41.7%</div>
+                            <div class="label">成約率</div>
+                            <div class="sub">実施→成約</div>
+                        </div>
             <div class="summary-card">
                 <div class="number">¥1.7M</div>
                 <div class="label">売上</div>
@@ -247,14 +247,19 @@
                 <div class="funnel-value">64.5%（申込者中）</div>
             </div>
             <div class="funnel-row">
-                <div class="funnel-label">個別相談実施</div>
+                <div class="funnel-label">審査通過</div>
                 <div class="funnel-bar" style="width: 4.8%; background: linear-gradient(90deg, #ffd700, #cc9900);">33名</div>
                 <div class="funnel-value">55%（対象者中）</div>
             </div>
             <div class="funnel-row">
+                <div class="funnel-label">個別相談実施</div>
+                <div class="funnel-bar" style="width: 3.5%; background: linear-gradient(90deg, #c44dff, #9933cc);">24名</div>
+                <div class="funnel-value">72.7%（審査通過者中）</div>
+            </div>
+            <div class="funnel-row">
                 <div class="funnel-label">成約</div>
                 <div class="funnel-bar" style="width: 1.4%; background: linear-gradient(90deg, #ff6b6b, #cc5555);">10名</div>
-                <div class="funnel-value">30.3%（面談中）</div>
+                <div class="funnel-value">41.7%（実施中）</div>
             </div>
             <div class="insight-box warning" style="margin-top: 25px;">
                 ⚠️ <strong>離脱ポイント：</strong>個別相談用LINE追加（379名）→ 申込（93名）で<strong>286名（75.5%）が離脱</strong><br>
@@ -374,7 +379,7 @@
                 </div>
             </div>
             <div class="chart-card">
-                <h3 class="chart-title">個別相談結果（実施33名）</h3>
+                <h3 class="chart-title">個別相談結果（実施24名）</h3>
                 <div class="chart-container">
                     <canvas id="resultChart"></canvas>
                 </div>
@@ -498,14 +503,14 @@
                 <p>
                     <strong>【成果】</strong><br>
                     公式LINE 6,900名に対し3日間限定（2/1〜2/4）で379名が個別相談用LINEに追加、うち93名が申込（LINE追加→申込率24.5%）。
-                    審査制・有料の訴求により質の高いリード獲得に成功。<strong>モニター10名成約、売上170万円</strong>を達成。成約率30.3%。
+                    審査制・有料の訴求により質の高いリード獲得に成功。<strong>モニター10名成約、売上170万円</strong>を達成。成約率41.7%（実施24名中）。
                 </p>
                 <p style="margin-top: 15px;">
                     <strong>【発見】</strong><br>
                     ・休眠していた旧LINEアカウント（6,400人）から73名（78%）が申込、再活性化に成功<br>
                     ・新ハウス（500人）は20名（22%）だが、母数対比の申込率は4.0%で旧ハウス（1.14%）の約3.5倍<br>
                     ・申込者の最大の悩みは「継続できない」「何から始めればいいかわからない」<br>
-                    ・面談実施33名中10名が成約（成約率30.3%）。検討中3名、言質4名の追加成約見込みあり
+                    ・面談実施24名中10名が成約（成約率41.7%）。検討中3名、言質4名の追加成約見込みあり
                 </p>
             </div>
         </div>
@@ -521,9 +526,9 @@
         new Chart(document.getElementById('selectionChart'), {
             type: 'doughnut',
             data: {
-                labels: ['個別相談実施', '審査通過・未面談', '自動対象外（10代）', '自動対象外（40代以上）', '今回除外（学生/低年収等）'],
+                labels: ['個別相談実施', '審査通過・未実施', '自動対象外（10代）', '自動対象外（40代以上）', '今回除外（学生/低年収等）'],
                 datasets: [{
-                    data: [33, 27, 14, 4, 15],
+                    data: [24, 9, 14, 4, 15],
                     backgroundColor: ['#00ff88', '#00d9ff', '#ff6b6b', '#ff8c00', '#ffd700'],
                     borderWidth: 0,
                 }]
@@ -641,14 +646,14 @@
             }
         });
 
-        // 面談結果
+        // 面談結果（実施24名のみ）
         new Chart(document.getElementById('resultChart'), {
             type: 'doughnut',
             data: {
-                labels: ['成約', '検討中', '言質', '失注', '飛び/キャンセル', 'リスケ調整中'],
+                labels: ['成約', '検討中', '言質', '失注'],
                 datasets: [{
-                    data: [10, 3, 4, 7, 6, 3],
-                    backgroundColor: ['#00ff88', '#00d9ff', '#c44dff', '#ff6b6b', '#8892b0', '#ffd700'],
+                    data: [10, 3, 4, 7],
+                    backgroundColor: ['#00ff88', '#00d9ff', '#c44dff', '#ff6b6b'],
                     borderWidth: 0,
                 }]
             },
